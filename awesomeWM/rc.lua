@@ -390,9 +390,9 @@ awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
               {description = "open  firefox", group = "launcher"}),
 
     awful.key({ modkey,           }, "#117", function () awful.spawn("sh /home/zer0/.local/bin/powermenu.sh") end,
-              {description = "open  firefox", group = "launcher"}),
+              {description = "open  powermenu", group = "launcher"}),
     awful.key({ modkey,           }, "#112", function () awful.spawn("sh /home/zer0/.local/bin/wifi.sh") end,
-              {description = "open  firefox", group = "launcher"}),
+              {description = "open  wifimenu", group = "launcher"}),
 
     awful.key({ modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -446,6 +446,12 @@ awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
 )
 
 clientkeys = gears.table.join(
+    awful.key({ modkey, "Shift"    }, "Right",     function () awful.tag.incmwfact( 0.01)    end),
+awful.key({ modkey, "Shift"    }, "Left",     function () awful.tag.incmwfact(-0.01)    end),
+awful.key({ modkey, "Shift"    }, "Down",     function () awful.client.incwfact( 0.01)    end),
+awful.key({ modkey, "Shift"    }, "Up",     function () awful.client.incwfact(-0.01)    end),
+
+
     awful.key({ modkey,           }, "f",
         function (c)
             c.fullscreen = not c.fullscreen
@@ -684,7 +690,8 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 --custom 
 beautiful.useless_gap= 2.5
 
-awful.spawn.with_shell("picom --experimental-backends --config /home/zer0/.config/awesome/picom.conf")
+
+-- awful.spawn.with_shell("picom --experimental-backends --config /home/zer0/.config/awesome/picom.conf")
 awful.spawn.with_shell("nitrogen --restore")
 awful.spawn.with_shell("xset +fp /home/zer0/.local/share/fonts")
 awful.spawn.with_shell("xset fp rehash")
