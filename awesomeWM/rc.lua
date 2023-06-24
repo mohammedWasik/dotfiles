@@ -1,8 +1,8 @@
 
 pcall(require, "luarocks.loader")
 
-local gears         = require("gears")
-local awful         = require("awful")
+local gears = require("gears")
+local awful = require("awful")
 require("awful.autofocus")
 local wibox = require("wibox")
 local beautiful = require("beautiful")
@@ -22,6 +22,11 @@ local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 local common = require("awful.widget.common")
+local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
+
+
+
+
 
 
 function myupdate(w, buttons, label, data, objects)
@@ -209,7 +214,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     -- set_wallpaper(s)
     -- Each screen has its own tag table.
-    awful.tag({ "🧭", "🧭", "🧭", "🧭", "🧭" }, s, awful.layout.layouts[1])
+    awful.tag({ "🧭", "🧭", "🧭", "🧭", "🧭", "🧭", "🧭" ,  }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -279,8 +284,11 @@ awful.screen.connect_for_each_screen(function(s)
         },
     }
     
-    -- Create the wibox
-    s.mywibox = awful.wibar{ position = "top",  screen = s, bg = beautiful.bg_normal .. "dd",height=26}
+    -- Create the wibox'
+    local separator = wibox.widget.textbox("  ")
+    
+
+    s.mywibox = awful.wibar{ position = "bottom",  screen = s, bg = beautiful.bg_normal .. "dd",height=26}
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -295,25 +303,34 @@ awful.screen.connect_for_each_screen(function(s)
             s.mypromptbox,
         },
         {
+            -- Middle widget
             layout = wibox.layout.fixed.horizontal,
             s.mytaglist,
 
         },
-        -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,   
-            volume_widget{
-                widget_type = 'text',
-                step=2
-            },
+   
             cpu_widget({
-                width = 70,
+                width = 100,
                 step_width = 2,
                 step_spacing = 0,
                 color = '#434c5e'
+            }),separator,
+            volume_widget{
+                widget_type = 'arc',
+                step=5
+            },
+            separator,
+            batteryarc_widget({
+                show_current_level = true,
+                arc_thickness = 5,
             }),
+            separator,
             wibox.widget.systray(),
+            separator,
             mytextclock,
+            separator,
             logout_menu_widget(),
 
         },
@@ -331,8 +348,8 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
-    awful.key({ modkey }, "]", function() volume_widget:inc(2) end),
-awful.key({ modkey }, "[", function() volume_widget:dec(2) end),
+    awful.key({ modkey }, "]", function() volume_widget:inc(5) end),
+awful.key({ modkey }, "[", function() volume_widget:dec(5) end),
 awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
@@ -385,6 +402,8 @@ awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
               {description = "open thunar", group = "launcher"}),
     awful.key({ modkey,           }, "c", function () awful.spawn("code") end,
               {description = "open vscode", group = "launcher"}),
+    awful.key({ modkey,           }, "p", function () awful.spawn("sayonara") end,
+              {description = "open sayonara", group = "launcher"}),
 
     awful.key({ modkey,           }, "b", function () awful.spawn("google-chrome") end,
               {description = "open  firefox", group = "launcher"}),
@@ -435,7 +454,7 @@ awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
               function ()
                   awful.prompt.run {
                     prompt       = "Run Lua code: ",
-                    textbox      = awful.screen.focused().mypromptbox.widget,
+                    -- textbox      = awful.screen.focused().mypromptbox.widget,
                     exe_callback = awful.util.eval,
                     history_path = awful.util.get_cache_dir() .. "/history_eval"
                   }
@@ -688,11 +707,14 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 
 --custom 
-beautiful.useless_gap= 2.5
+beautiful.useless_gap= 3
 
 
 -- awful.spawn.with_shell("picom --experimental-backends --config /home/zer0/.config/awesome/picom.conf")
 awful.spawn.with_shell("nitrogen --restore")
 awful.spawn.with_shell("xset +fp /home/zer0/.local/share/fonts")
 awful.spawn.with_shell("xset fp rehash")
+awful.spawn.with_shell("pgrep -u $USER -x nm-applet > /dev/null || (nm-applet &)")
+
+
 
