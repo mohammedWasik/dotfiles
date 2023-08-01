@@ -312,20 +312,22 @@ awful.screen.connect_for_each_screen(function(s)
             layout = wibox.layout.fixed.horizontal,   
    
             cpu_widget({
-                width = 100,
+                width = 50,
                 step_width = 2,
                 step_spacing = 0,
                 color = '#434c5e'
-            }),separator,
-            volume_widget{
-                widget_type = 'arc',
-                step=5
-            },
-            separator,
-            batteryarc_widget({
-                show_current_level = true,
-                arc_thickness = 5,
             }),
+            separator,
+            separator,
+            volume_widget{
+                widget_type = 'icon_and_text',
+                step=2
+            },
+            -- separator,
+            -- batteryarc_widget({
+                -- show_current_level = true,
+                -- arc_thickness = 5,
+            -- }),
             separator,
             wibox.widget.systray(),
             separator,
@@ -338,6 +340,8 @@ awful.screen.connect_for_each_screen(function(s)
 end)
 -- }}}
 
+
+
 -- {{{ Mouse bindings
 root.buttons(gears.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
@@ -346,11 +350,34 @@ root.buttons(gears.table.join(
 ))
 -- }}}
 
+
+local function print_awesome_memory_stats(message)
+    print(os.date(), "\nLua memory usage:", collectgarbage("count"))
+    out_string = tostring(os.date()) .. "\nLua memory usage:"..tostring(collectgarbage("count")).."\n"
+    out_string = out_string .. "Objects alive:"
+    print("Objects alive:")
+    for name, obj in pairs{ button = button, client = client, drawable = drawable, drawin = drawin, key = key, screen = screen, tag = tag } do
+        out_string =out_string .. "\n" .. tostring(name) .. " = " ..tostring(obj.instances())
+        print(name, obj.instances())
+    end
+    naughty.notify({title = "Awesome WM memory statistics " .. message, text = out_string, timeout=20,hover_timeout=20})
+end
+
+
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+    awful.key({modkey,"Control" }, "s", function()
+        print_awesome_memory_stats("Precollect")
+        collectgarbage("collect")
+        collectgarbage("collect")
+        gears.timer.start_new(20, function()
+            print_awesome_memory_stats("Postcollect")
+            return false
+        end)
+    end, {description = "print awesome wm memory statistics", group="awesome"}),
     awful.key({ modkey }, "]", function() volume_widget:inc(5) end),
-awful.key({ modkey }, "[", function() volume_widget:dec(5) end),
-awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
+    awful.key({ modkey }, "[", function() volume_widget:dec(5) end),
+    awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -448,7 +475,7 @@ awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({modkey}, 'r', function() awful.util.spawn('rofi -modi drun -show drun') end, {description='run rofi', group='launcher'}),
+    awful.key({modkey}, 'r', function() awful.util.spawn('.config/rofi/scripts/launcher_t5') end, {description='run rofi', group='launcher'}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -701,6 +728,9 @@ end)
 -- end)
 
 
+
+
+
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
@@ -714,7 +744,7 @@ beautiful.useless_gap= 3
 awful.spawn.with_shell("nitrogen --restore")
 awful.spawn.with_shell("xset +fp /home/zer0/.local/share/fonts")
 awful.spawn.with_shell("xset fp rehash")
-awful.spawn.with_shell("pgrep -u $USER -x nm-applet > /dev/null || (nm-applet &)")
+-- awful.spawn.with_shell("pgrep -u $USER -x nm-applet > /dev/null || (nm-applet &)")
 
 
 
