@@ -1,10 +1,9 @@
 
 pcall(require, "luarocks.loader")
 
+
 local gears = require("gears")
-local awful = require("awful")
-require("awful.autofocus")
-local wibox = require("wibox")
+local awful = require("awful")local wibox = require("wibox")
 local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
@@ -214,7 +213,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     -- set_wallpaper(s)
     -- Each screen has its own tag table.
-    awful.tag({ "🧭", "🧭", "🧭", "🧭", "🧭", "🧭", "🧭" ,  }, s, awful.layout.layouts[1])
+    awful.tag({ "🧭", "🧭", "🧭", "🧭", "🧭", "🧭", }, s, awful.layout.layouts[1])
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -319,16 +318,8 @@ awful.screen.connect_for_each_screen(function(s)
             }),
             separator,
             separator,
-            volume_widget{
-                widget_type = 'icon_and_text',
-                step=2
-            },
-            -- separator,
-            -- batteryarc_widget({
-                -- show_current_level = true,
-                -- arc_thickness = 5,
-            -- }),
-            separator,
+            volume_widget(),
+                separator,
             wibox.widget.systray(),
             separator,
             mytextclock,
@@ -374,10 +365,7 @@ globalkeys = gears.table.join(
             print_awesome_memory_stats("Postcollect")
             return false
         end)
-    end, {description = "print awesome wm memory statistics", group="awesome"}),
-    awful.key({ modkey }, "]", function() volume_widget:inc(5) end),
-    awful.key({ modkey }, "[", function() volume_widget:dec(5) end),
-    awful.key({ modkey }, "\\", function() volume_widget:toggle() end),
+    end, {description = "print awesome wm memory statistics", group="awesome"}), 
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -423,6 +411,15 @@ globalkeys = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
+   
+
+   
+    awful.key({ modkey,           }, "]", function () awful.spawn("amixer -D pulse sset Master 5%+") end,
+              {description = "increase sound", group = "launcher"}),
+    awful.key({ modkey,           }, "[", function () awful.spawn("amixer -D pulse sset Master 5%-") end,
+              {description = "decrease sound", group = "launcher"}),
+    awful.key({ modkey,           }, "\\", function () awful.spawn("amixer -D pulse sset Master toggle") end,
+              {description = "decrease sound", group = "launcher"}),
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey,           }, "e", function () awful.spawn("thunar") end,
@@ -440,9 +437,9 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "#112", function () awful.spawn("sh /home/zer0/.local/bin/wifi.sh") end,
               {description = "open  wifimenu", group = "launcher"}),
 
-    awful.key({ modkey, "Control" }, "r", awesome.restart,
+    awful.key({ modkey, "Shift" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit,
+    awful.key({ modkey, "Shift"   }, "End", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
@@ -475,7 +472,7 @@ globalkeys = gears.table.join(
               {description = "restore minimized", group = "client"}),
 
     -- Prompt
-    awful.key({modkey}, 'r', function() awful.util.spawn('.config/rofi/scripts/launcher_t5') end, {description='run rofi', group='launcher'}),
+    awful.key({modkey}, 'r', function() awful.util.spawn('.config/rofi/scripts/launcher_t6') end, {description='run rofi', group='launcher'}),
 
     awful.key({ modkey }, "x",
               function ()
@@ -742,9 +739,9 @@ beautiful.useless_gap= 3
 
 -- awful.spawn.with_shell("picom --experimental-backends --config /home/zer0/.config/awesome/picom.conf")
 awful.spawn.with_shell("nitrogen --restore")
+awful.spawn.with_shell("~/.config/monitor-left.sh")
 awful.spawn.with_shell("xset +fp /home/zer0/.local/share/fonts")
 awful.spawn.with_shell("xset fp rehash")
 -- awful.spawn.with_shell("pgrep -u $USER -x nm-applet > /dev/null || (nm-applet &)")
-
 
 
