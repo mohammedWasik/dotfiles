@@ -1,4 +1,5 @@
 
+
 pcall(require, "luarocks.loader")
 
 
@@ -9,6 +10,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -22,7 +24,24 @@ local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
 local logout_menu_widget = require("awesome-wm-widgets.logout-menu-widget.logout-menu")
 local common = require("awful.widget.common")
 local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
+local apt_widget = require("awesome-wm-widgets.apt-widget.apt-widget")
+local cmus_widget = require('awesome-wm-widgets.cmus-widget.cmus')
+local net_speed_widget = require("awesome-wm-widgets.net-speed-widget.net-speed")
+local todo_widget = require("awesome-wm-widgets.todo-widget.todo")
 
+
+
+
+
+
+
+-- Start lxpolkit
+awful.spawn.with_shell("lxpolkit &")
+-- Set necessary environment variables
+awful.spawn.with_shell("eval $(gnome-keyring-daemon -s --components=pkcs11,secrets,ssh,gpg) &")
+
+
+-- Rest of your AwesomeWM configuration
 
 
 
@@ -47,6 +66,7 @@ function myupdate(w, buttons, label, data, objects)
         local text, bg, bg_image, icon = label(o)
         ib:set_image(icon)
     l:add(ib)
+    
         --w:add(ib)
    end
    w:add(l)
@@ -78,6 +98,7 @@ end
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.font = "FiraCode Nerd Font Mono Medium 10"
 
 -- This is used later as the default terminal and editor to run.
 terminal = "alacritty"
@@ -213,7 +234,10 @@ awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
     -- set_wallpaper(s)
     -- Each screen has its own tag table.
-    awful.tag({ "🧭", "🧭", "🧭", "🧭", "🧭", "🧭", }, s, awful.layout.layouts[1])
+
+    
+  awful.tag({ "💀", "💀", "💀", "💀","💀","💀","💀","💀","💀" }, screen[s], awful.layout.layouts[1])
+
 
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -225,6 +249,7 @@ awful.screen.connect_for_each_screen(function(s)
                            awful.button({ }, 3, function () awful.layout.inc(-1) end),
                            awful.button({ }, 4, function () awful.layout.inc( 1) end),
                            awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+                           
     -- Create a taglist widget
     s.mytaglist = awful.widget.taglist {
         screen  = s,
@@ -238,15 +263,15 @@ awful.screen.connect_for_each_screen(function(s)
         filter   = awful.widget.tasklist.filter.currenttags,
         buttons  = tasklist_buttons,
         style    = {
-            shape_border_width = 1,
-            shape_border_color = '#777777',
+            shape_border_width = 1.5,
+            shape_border_color = '#ffffff',
             shape  = gears.shape.rounded_bar,
         },
         layout   = {
             spacing = 10,
             spacing_widget = {
                 {
-                    forced_width = 5,
+                    forced_width =0 ,
                     shape        = gears.shape.circle,
                     widget       = wibox.widget.separator
                 },
@@ -270,7 +295,8 @@ awful.screen.connect_for_each_screen(function(s)
                     },
                     {
                         id     = 'text_role',
-                        widget = wibox.widget.textbox,
+                        widget = wibox.widget.textbox(),
+                        
                     },
                     layout = wibox.layout.fixed.horizontal,
                 },
@@ -278,16 +304,20 @@ awful.screen.connect_for_each_screen(function(s)
                 right = 10,
                 widget = wibox.container.margin
             },
+            forced_width =150,
             id     = 'background_role',
             widget = wibox.container.background,
         },
     }
     
     -- Create the wibox'
-    local separator = wibox.widget.textbox("  ")
+    local separator = wibox.widget.textbox(" ")
     
 
-    s.mywibox = awful.wibar{ position = "bottom",  screen = s, bg = beautiful.bg_normal .. "dd",height=26}
+
+
+   s.mywibox = awful.wibar{ position = "top",  screen = s, bg = beautiful.bg_normal .. "dd",height=26}
+   
 
     -- Add widgets to the wibox
     s.mywibox:setup {
@@ -308,8 +338,9 @@ awful.screen.connect_for_each_screen(function(s)
 
         },
         { -- Right widgets
-            layout = wibox.layout.fixed.horizontal,   
-   
+            layout = wibox.layout.fixed.horizontal,
+            todo_widget(),
+            separator,
             cpu_widget({
                 width = 50,
                 step_width = 2,
@@ -317,14 +348,15 @@ awful.screen.connect_for_each_screen(function(s)
                 color = '#434c5e'
             }),
             separator,
-            separator,
-            volume_widget(),
-                separator,
-            wibox.widget.systray(),
+            volume_widget{
+            widget_type = 'arc'
+            },
             separator,
             mytextclock,
             separator,
-            logout_menu_widget(),
+                logout_menu_widget{
+            onlock = function() awful.spawn.with_shell('i3lock-fancy') end
+        },
 
         },
     }
@@ -423,14 +455,16 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ modkey,           }, "e", function () awful.spawn("thunar") end,
-              {description = "open thunar", group = "launcher"}),
+    {description = "open thunar", group = "launcher"}),
+    awful.key({ modkey,"Shift"}, "e", function () awful.spawn("nemo") end,
+    {description = "open nemo", group = "launcher"}),
     awful.key({ modkey,           }, "c", function () awful.spawn("code") end,
               {description = "open vscode", group = "launcher"}),
     awful.key({ modkey,           }, "p", function () awful.spawn("sayonara") end,
               {description = "open sayonara", group = "launcher"}),
 
     awful.key({ modkey,           }, "b", function () awful.spawn("google-chrome") end,
-              {description = "open  firefox", group = "launcher"}),
+              {description = "open  chrome", group = "launcher"}),
 
     awful.key({ modkey,           }, "#117", function () awful.spawn("sh /home/zer0/.local/bin/powermenu.sh") end,
               {description = "open  powermenu", group = "launcher"}),
@@ -541,7 +575,9 @@ awful.key({ modkey, "Shift"    }, "Up",     function () awful.client.incwfact(-0
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
 -- This should map on the top row of your keyboard, usually 1 to 9.
+
 for i = 1, 9 do
+
     globalkeys = gears.table.join(globalkeys,
         -- View tag only.
         awful.key({ modkey }, "#" .. i + 9,
@@ -584,9 +620,13 @@ for i = 1, 9 do
                           end
                       end
                   end,
-                  {description = "toggle focused client on tag #" .. i, group = "tag"})
+                  {description = "toggle focused client on tag #" .. i, group = "tag"})                  
     )
+  
+
+    
 end
+
 
 clientbuttons = gears.table.join(
     awful.button({ }, 1, function (c)
@@ -732,16 +772,26 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
+tag.connect_signal("property::selected", function() focus_on_last_in_history(mouse.screen) end)
+
+
+client.connect_signal("unmanage", function() focus_on_last_in_history(mouse.screen) end)
+
+function focus_on_last_in_history( screen )
+  local c = awful.client.focus.history.get(screen, 0)
+  if not (c == nil) then
+    client.focus = c
+    c:raise()
+  end
+end
+
 
 --custom 
-beautiful.useless_gap= 3
-
-
--- awful.spawn.with_shell("picom --experimental-backends --config /home/zer0/.config/awesome/picom.conf")
-awful.spawn.with_shell("nitrogen --restore")
-awful.spawn.with_shell("~/.config/monitor-left.sh")
+beautiful.useless_gap=2.5
+awful.spawn.with_shell("picom")
+awful.spawn.with_shell("/home/zer0/wallpaper.sh")
+awful.spawn.with_shell("~/.screenlayout/tob-bottom.sh")
 awful.spawn.with_shell("xset +fp /home/zer0/.local/share/fonts")
 awful.spawn.with_shell("xset fp rehash")
--- awful.spawn.with_shell("pgrep -u $USER -x nm-applet > /dev/null || (nm-applet &)")
-
+awful.spawn.with_shell("pgrep -u $USER -x nm-applet > /dev/null || (nm-applet &)")
 
