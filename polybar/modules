@@ -1,5 +1,14 @@
 ;modules for polybar
 
+
+[module/xkeyboard]
+type = internal/xkeyboard
+
+; List of indicators to ignore
+blacklist-0 = num lock
+blacklist-1 = scroll lock
+
+
 [module/title]
 type = internal/xwindow
 ; Available tokens:
@@ -123,7 +132,7 @@ label-muted-foreground = #cc241d
 [module/temperature]
 type = internal/temperature
 thermal-zone = 0
-warn-temperature = 69
+warn-temperature = 75
 
 format = <ramp> <label>
 format-underline = #f50a4d
@@ -136,9 +145,15 @@ label-warn = Temp-%temperature-c%
 label-warn-foreground = ${colors.secondary}
 
 ramp-0 = 
-ramp-1 = 
+ramp-1 = 
 ramp-2 = 
 ramp-foreground = ${colors.foreground-alt}
+
+[module/tray]
+type = internal/tray
+
+format-margin = 4px
+tray-spacing = 3px 
  
- 
+
 
