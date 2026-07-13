@@ -1,0 +1,22 @@
+# Ignore everything by default
+*
+
+# Explicitly track these
+!.gitignore
+!ghostty/
+!ghostty/**
+!i3/
+!i3/**
+!polybar/
+!polybar/**
+!dunst/
+!dunst/**
+!rofi/
+!rofi/**
+!starship.toml
+!picom/
+!picom/**
+
+# Never track these even inside allowed dirs
+i3/.claude/
+i3/Plans/

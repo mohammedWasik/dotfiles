@@ -1,0 +1,88 @@
+* {
+    background-color: #1a1a1a;
+    text-color: #ffffff;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    width: 1000px;
+    height: 700px;
+    border-radius: 20px;
+    background-color: @background-color;
+    border: 3px solid #007acc;
+}
+
+element {
+    padding: 16px 20px;
+    background-color: transparent;
+    text-color: @text-color;
+    border-radius: 12px;
+    margin: 6px;
+    border: 2px solid transparent;
+}
+
+element selected {
+    background-color: #007acc;
+    text-color: #1a1a1a;
+    border-color: #007acc;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+    horizontal-align: 0.0;
+}
+
+element-icon {
+    size: 32px;
+    padding: 0 12px 0 0;
+}
+
+entry {
+    padding: 20px;
+    background-color: #2d2d2d;
+    text-color: @text-color;
+    border-radius: 12px;
+    margin: 12px;
+    border: 2px solid #007acc;
+}
+
+inputbar {
+    children: [entry];
+    background-color: @background-color;
+    border-radius: 12px;
+    margin: 12px;
+}
+
+listview {
+    background-color: @background-color;
+    columns: 3;
+    lines: 6;
+    border-radius: 12px;
+    margin: 12px;
+    padding: 8px;
+}
+
+mainbox {
+    children: [inputbar, listview];
+    background-color: @background-color;
+    border-radius: 20px;
+}
+
+prompt {
+    enabled: true;
+    padding: 16px 0 0 20px;
+    background-color: transparent;
+    text-color: #007acc;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: "󰋩 Workspaces";
+    margin: 0 12px 0 0;
+    text-color: #007acc;
+}

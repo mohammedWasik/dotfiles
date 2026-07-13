@@ -1,0 +1,335 @@
+; Polybar configuration - Dual monitor setup
+; Primary bar (laptop): eDP-1
+; Secondary bar (external): DP-2
+
+[global/wm]
+margin-top = 1
+margin-bottom = 1
+
+[colors]
+background     = #1e1e20
+foreground     = #ebdbb2
+foreground-dim = #a89984
+alert          = #cc241d
+gruvbox-red    = #fb4934
+gruvbox-green  = #b8bb26
+gruvbox-yellow = #fabd2f
+gruvbox-blue   = #83a598
+gruvbox-aqua   = #8ec07c
+gruvbox-orange = #fe8019
+coral          = #e63946
+dark-pill      = #4a1e28
+
+[bar/primary]
+monitor = eDP-1
+width = 100%
+height = 36
+radius = 10
+fixed-center = true
+background = #00000000
+foreground = ${colors.foreground}
+line-size = 2
+border-size = 0
+border-top-size = 8
+border-top-color = #00000000
+padding-left = 6
+padding-right = 6
+module-margin-left = 0
+module-margin-right = 0
+font-0 = "FiraCode Nerd Font:size=11;2"
+font-1 = "FiraCode Nerd Font:style=Bold:size=11;2"
+font-2 = "Noto Color Emoji:size=10;2"
+font-3 = "FiraCode Nerd Font:size=25;0"
+modules-left = left-cap date-local right-cap
+modules-center = left-cap i3 right-cap
+modules-right = left-cap cpu memory temperature battery volume right-cap
+wm-restack = i3
+override-redirect = false
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[bar/secondary]
+monitor = DP-2
+width = 100%
+height = 36
+radius = 10
+fixed-center = true
+background = #00000000
+foreground = ${colors.foreground}
+line-size = 2
+border-size = 0
+border-top-size = 8
+border-top-color = #00000000
+padding-left = 6
+padding-right = 6
+module-margin-left = 0
+module-margin-right = 0
+font-0 = "FiraCode Nerd Font:size=11;2"
+font-1 = "FiraCode Nerd Font:style=Bold:size=11;2"
+font-2 = "Noto Color Emoji:size=10;2"
+font-3 = "FiraCode Nerd Font:size=25;0"
+modules-left = left-cap date-local right-cap
+modules-center = left-cap i3 right-cap
+modules-right = left-cap cpu memory temperature battery volume right-cap
+wm-restack = i3
+override-redirect = false
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/sep]
+type = custom/text
+format = │
+format-foreground = ${colors.foreground-dim}
+
+[module/left-cap]
+type = custom/text
+format = 
+format-foreground = ${colors.dark-pill}
+format-font = 4
+
+[module/right-cap]
+type = custom/text
+format = 
+format-foreground = ${colors.dark-pill}
+format-font = 4
+
+[module/tray]
+type = internal/tray
+format-background = ${colors.dark-pill}
+format-padding = 1
+tray-size = 66%
+tray-spacing = 4
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+warn-percentage = 80
+format-background = ${colors.dark-pill}
+format-padding = 1
+format-warn-background = ${colors.dark-pill}
+format-warn-padding = 1
+format-prefix = " "
+format-prefix-foreground = ${colors.gruvbox-red}
+format = <label>
+label = %percentage%%
+label-foreground = ${colors.gruvbox-red}
+format-warn-prefix = " "
+format-warn-prefix-foreground = ${colors.alert}
+format-warn = <label-warn>
+label-warn = %percentage%%
+label-warn-foreground = ${colors.alert}
+
+[module/memory]
+type = internal/memory
+interval = 2
+warn-percentage = 75
+format-background = ${colors.dark-pill}
+format-padding = 1
+format-warn-background = ${colors.dark-pill}
+format-warn-padding = 1
+format-prefix = " "
+format-prefix-foreground = ${colors.gruvbox-yellow}
+format = <label>
+label = %percentage_used%%
+label-foreground = ${colors.gruvbox-yellow}
+format-warn-prefix = " "
+format-warn-prefix-foreground = ${colors.gruvbox-orange}
+format-warn = <label-warn>
+label-warn = %percentage_used%%
+label-warn-foreground = ${colors.gruvbox-orange}
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
+low-threshold = 15
+format-charging-background = ${colors.dark-pill}
+format-charging-padding = 1
+format-discharging-background = ${colors.dark-pill}
+format-discharging-padding = 1
+format-full-background = ${colors.dark-pill}
+format-full-padding = 1
+format-low-background = ${colors.dark-pill}
+format-low-padding = 1
+
+format-charging = <label-charging>
+format-charging-prefix = " "
+format-charging-prefix-foreground = ${colors.gruvbox-green}
+label-charging = %percentage%%
+label-charging-foreground = ${colors.gruvbox-green}
+
+format-discharging = <ramp-capacity> <label-discharging>
+label-discharging = %percentage%%
+label-discharging-foreground = ${colors.gruvbox-green}
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.gruvbox-green}
+
+format-full-prefix = " "
+format-full-prefix-foreground = ${colors.gruvbox-green}
+format-full = <label-full>
+label-full = 100%
+label-full-foreground = ${colors.gruvbox-green}
+
+format-low = <label-low>
+format-low-prefix = " "
+format-low-prefix-foreground = ${colors.alert}
+label-low = %percentage%%
+label-low-foreground = ${colors.alert}
+
+[module/volume]
+type = internal/pulseaudio
+interval = 1
+format-volume-background = ${colors.dark-pill}
+format-volume-padding = 1
+format-muted-background = ${colors.dark-pill}
+format-muted-padding = 1
+format-volume = <ramp-volume> <label-volume>
+label-volume = %percentage%%
+label-volume-foreground = ${colors.gruvbox-blue}
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-foreground = ${colors.gruvbox-blue}
+label-muted =  muted
+label-muted-foreground = ${colors.alert}
+
+[module/date-bd]
+type = custom/script
+exec = TZ=Asia/Dhaka date '+%I:%M %p'
+interval = 1
+format-prefix = " BD "
+format-prefix-foreground = ${colors.foreground-dim}
+format = <label>
+label = %output%
+label-foreground = ${colors.foreground}
+
+# [module/date-sg]
+# type = custom/script
+# exec = TZ=Asia/Singapore date '+%I:%M %p'
+# interval = 1
+# format-prefix = "SG "
+# format-prefix-foreground = ${colors.foreground-dim}
+# format = <label>
+# label = %output%
+# label-foreground = ${colors.foreground}
+# 
+# [module/date-au]
+# type = custom/script
+# exec = TZ=Australia/Sydney date '+%I:%M %p'
+# interval = 1
+# format-prefix = "AU "
+# format-prefix-foreground = ${colors.foreground-dim}
+# format = <label>
+# label = %output%
+# label-foreground = ${colors.foreground}
+# 
+[module/date-local]
+type = internal/date
+timezone = Asia/Dhaka
+interval = 1
+format-background = ${colors.dark-pill}
+format-padding = 1
+date = %Y-%m-%d
+time = %I:%M %p
+format-prefix = " "
+format-prefix-foreground = ${colors.gruvbox-yellow}
+format = <label>
+label = %date%  %time%
+label-foreground = ${colors.foreground}
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+format-background = ${colors.dark-pill}
+format-padding = 1
+index-sort = true
+wrapping-scroll = false
+strip-wsnumbers = true
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.gruvbox-yellow}
+
+label-focused = %index%
+label-focused-underline = ${colors.gruvbox-yellow}
+label-focused-underline-size = 3
+label-focused-padding = 2
+label-focused-foreground = ${colors.gruvbox-yellow}
+
+label-unfocused = %index%
+label-unfocused-padding = 2
+label-unfocused-foreground = ${colors.foreground-dim}
+
+label-visible = %index%
+label-visible-padding = 2
+
+label-urgent = %index%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:60:...%
+format-foreground = ${colors.foreground}
+
+[module/network]
+type = internal/network
+interface = wlan0
+interval = 3.0
+format-connected-background = ${colors.dark-pill}
+format-connected-padding = 1
+format-disconnected-background = ${colors.dark-pill}
+format-disconnected-padding = 1
+format-connected-prefix = " "
+format-connected-prefix-foreground = ${colors.gruvbox-aqua}
+format-connected = <label-connected>
+label-connected = %downspeed% %upspeed%
+label-connected-foreground = ${colors.foreground}
+format-disconnected-prefix = " "
+format-disconnected-prefix-foreground = ${colors.alert}
+format-disconnected = <label-disconnected>
+label-disconnected = disconnected
+label-disconnected-foreground = ${colors.alert}
+
+[module/temperature]
+type = internal/temperature
+interval = 2
+thermal-zone = 6
+warn-temperature = 75
+format = <label>
+format-background = ${colors.dark-pill}
+format-padding = 1
+format-prefix = " "
+format-prefix-foreground = ${colors.gruvbox-yellow}
+label = %temperature-c%
+label-foreground = ${colors.foreground}
+format-warn = <label-warn>
+format-warn-background = ${colors.dark-pill}
+format-warn-padding = 1
+format-warn-prefix = " "
+format-warn-prefix-foreground = ${colors.alert}
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.alert}
+
+[module/disk]
+type = internal/fs
+interval = 30
+mount-0 = /
+format-mounted-prefix = " "
+format-mounted-prefix-foreground = ${colors.gruvbox-aqua}
+format-mounted = <label-mounted>
+label-mounted = %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.alert}
+
+[settings]
+screenchange-reload = true
+compositing-background = source
+compositing-foreground = over
+compositing-border = over
+pseudo-transparency = true

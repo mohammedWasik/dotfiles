@@ -1,0 +1,28 @@
+theme = "Gruvbox Material"
+
+
+# Fonts
+font-size = 4
+ 
+background-opacity = 0.9
+
+
+# Window
+window-decoration = none
+window-padding-x = 3
+window-padding-y = 3
+window-padding-balance = true
+ 
+# Cursor
+cursor-style = bar
+ 
+# Clipboard
+clipboard-read = allow
+clipboard-write = allow
+
+ 
+
+confirm-close-surface=false
+
+# Auto-attach tmux on open, create session if none exists
+command = /bin/zsh -c "tmux attach 2>/dev/null || tmux new-session"
