@@ -17,6 +17,9 @@
 !picom/
 !picom/**
 
+!home/
+!home/**
+
 # Never track these even inside allowed dirs
 i3/.claude/
 i3/Plans/
