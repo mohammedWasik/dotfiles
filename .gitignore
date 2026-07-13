@@ -3,6 +3,8 @@
 
 # Explicitly track these
 !.gitignore
+!README.md
+!install.sh
 !ghostty/
 !ghostty/**
 !i3/
